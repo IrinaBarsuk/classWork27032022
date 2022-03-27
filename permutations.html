@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href = "css/w3.css">
+    <script src = "js/jquery.js"></script>
+    <title>Перестановки</title>
+</head>
+<body>
+    <div class="w3-bar w3-blue w3-margin">
+    <a href="javascript:permutations();" class="w3-bar-item w3-button">Перестановки</a>
+    <a href="javascript:kpermutations();" class="w3-bar-item w3-button">Размещение</a>
+    <a href="javascript:combination();" class="w3-bar-item w3-button">Сочетание</a>
+    </div>
+    <div id="container" class="w3-container w3-card w3-margin w3-padding-16">
+        <img src="images/banana-svgrepo-com.svg" width="50px" height="50px">
+        <img src="images/cherry-svgrepo-com.svg" width="50px" height="50px">
+        <img src="images/strawberry-svgrepo-com.svg" width="50px" height="50px">
+        <img src="images/pineapple-svgrepo-com.svg" width="50px" height="50px">
+    </div>
+    <script>
+       var banana = "images/banana-svgrepo-com.svg";
+       var cherry = "images/cherry-svgrepo-com.svg";
+       var strawberry = "images/strawberry-svgrepo-com.svg";
+       var pineapple = "images/pineapple-svgrepo-com.svg";
+       var images = [banana, cherry, strawberry, pineapple];
+
+       function factorial(n){
+           return (n>1) ? n*factorial(n-1) : 1;
+       }
+
+       function swap(a,b){
+           return [b,a];
+       }
+
+        function nextSet(a, n) {
+        var j = n - 2;
+        while (j != -1 && a[j] >= a[j + 1]) j--;
+        if (j == -1)
+            return false; // больше перестановок нет
+        var k = n - 1;
+        while (a[j] >= a[k]) k--;
+        [a[j],a[k]] = swap(a[j], a[k]);
+        var l = j + 1, r = n - 1; // сортируем оставшуюся часть последовательности
+        while (l<r) {
+            [a[l],a[r]] = swap(a[l], a[r]);
+            l++; r--;
+            }
+        return true;
+        }
+
+        function permutations(){
+        var a=[];
+        var n=4;//количество картинок
+        $('#container').html("Число перестановок:"+ factorial(n)+"<br>");
+        for (var i=0; i<n; i++) 
+            a.push(i);
+
+        
+        //console.log (a);    
+        do{ 
+            for (var i=0; i<n; i++){
+            img = $('<img src="'+images[a[i]]+'" width="50px" height="50px">');
+            img.css('margin', '8px');
+            $('#container').append(img);
+            }
+            var br = $('<br>');
+            $('#container').append(br);
+            
+        var result = nextSet(a,n);  
+        
+        //console.log(a);
+        }  
+        while (result);
+    }
+
+    function kpermutations(){
+        var a=[];
+        var n=4; var m=2;//количество картинок - 2 из 4
+        $('#container').html("Число размещений:"+ factorial(n)/factorial(n-m)+"<br>");
+        for (var i=0; i<n; i++) 
+            a.push(i);
+
+        
+        //console.log (a);    
+        do{ 
+            for (var i=0; i<m; i++){
+            img = $('<img src="'+images[a[i]]+'" width="50px" height="50px">');
+            img.css('margin', '8px');
+            $('#container').append(img);
+            }
+            var br = $('<br>');
+            $('#container').append(br);
+            
+        var result = nextSetA(a,n,m);  
+        //console.log(a);
+        }  
+        while (result);
+    }
+    function combination(){
+        var a=[];
+        var n=4; var m=2;
+        $('#container').html("Число сочетаний:"+ factorial(n)/factorial(n-m)/factorial(m)+"<br>");
+        for (var i=0; i<n; i++) 
+            a.push(i+1);
+
+        //console.log (a);    
+        do{ 
+            for (var i=0; i<m; i++){
+            img = $('<img src="'+images[a[i]-1]+'" width="50px" height="50px">');
+            img.css('margin', '8px');
+            $('#container').append(img);
+            }
+            var br = $('<br>');
+            $('#container').append(br);
+            
+        var result = nextSetS(a,n,m);  
+        //console.log(a);
+        }  
+        while (result);
+    }
+    function nextSetA(a, n, m) {//функция размещение
+  var j;
+  do  // повторяем пока не будет найдено следующее размещение
+  {
+    j = n - 2;	
+    while (j != -1 && a[j] >= a[j + 1]) j--;			
+    if (j == -1)
+      return false; // больше размещений нет
+    var  k = n - 1;
+    while (a[j] >= a[k]) k--;	
+    [a[j],a[k]] = swap(a[j], a[k]);
+    var  l = j + 1, r = n - 1; // сортируем оставшуюся часть последовательности
+    while (l < r){
+	[a[l],a[r]] = swap(a[l], a[r]);      
+	  l++; r--;
+	  }
+    } while (j > m - 1);
+    return true;
+}
+
+function nextSetS(a, n, m)
+{
+  var k = m;
+  for (var i = k - 1; i >= 0; --i)
+    if (a[i] < n - k + i + 1) 
+    {
+      ++a[i];
+      for (var j = i + 1; j < k; ++j)	  
+        a[j] = a[j - 1] + 1;
+      return true;
+    }
+  return false;
+}
+    </script>
+</body>
+</html>
